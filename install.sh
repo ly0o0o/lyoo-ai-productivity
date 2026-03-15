@@ -22,6 +22,7 @@ SKILLS=(
   "$SKILLS_ROOT/workflow/question-details"
   "$SKILLS_ROOT/workflow/requirements-plan-design-thinking"
   "$SKILLS_ROOT/backend/write-postgres-sql"
+  "$SKILLS_ROOT/backend/nodejs-compact-style"
   "$SKILLS_ROOT/design/ui-ux-pro-max"
 )
 

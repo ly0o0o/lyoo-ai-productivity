@@ -12,6 +12,7 @@
 ## 后端（Backend）
 
 - `backend/write-postgres-sql` — PostgreSQL SQL 生成、慢查询优化、Schema 感知查询
+- `backend/nodejs-compact-style` — Node.js/TypeScript 紧凑代码风格：早返回、无冗余注释、可选链、三元运算符、无 console.log
 
 ## 设计（Design）
 
