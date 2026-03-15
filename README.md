@@ -27,7 +27,7 @@ lyoo-ai-productivity/
 │
 ├── AGENTS.md                                    # AI agent 路由说明（agent 会读这个）
 ├── README.md                                    # 本文件
-├── install.sh                                   # 一键 symlink 安装脚本
+├── install.sh                                   # 一键 symlink 安装脚本（支持 5 个 IDE）
 │
 ├── workflow/                                    # 工作流类 skills
 │   ├── code-review/
@@ -37,9 +37,13 @@ lyoo-ai-productivity/
 │   └── requirements-plan-design-thinking/
 │       └── SKILL.md                            # 方案设计、架构权衡、共创
 │
-└── backend/                                     # 后端技术类 skills
-    └── write-postgres-sql/
-        └── SKILL.md                            # PostgreSQL 查询生成与优化
+├── backend/                                     # 后端技术类 skills
+│   └── write-postgres-sql/
+│       └── SKILL.md                            # PostgreSQL 查询生成与优化
+│
+└── design/                                      # 设计类 skills
+    └── ui-ux-pro-max/
+        └── SKILL.md                            # UI/UX 方案、组件实现、可访问性
 ```
 
 ---
@@ -86,6 +90,7 @@ ls -la ~/.claude/skills/
 | `question-details` | workflow | 需求模糊时强制澄清，先确认再实现 |
 | `requirements-plan-design-thinking` | workflow | 功能方案设计、架构权衡、多路径收敛、反驳不合理需求 |
 | `write-postgres-sql` | backend | PostgreSQL SQL 生成、慢查询优化、Schema 感知查询 |
+| `ui-ux-pro-max` | design | UI/UX 方案设计、组件实现、交互优化、可访问性、设计系统对齐 |
 
 ---
 
@@ -159,5 +164,16 @@ chmod +x install.sh
 |---|---|
 | `workflow/` | 通用工作流：代码评审、需求澄清、方案设计、PR 生成 |
 | `backend/` | 后端技术：数据库、缓存、消息队列、性能优化 |
+| `design/` | UI/UX 设计：组件设计、交互优化、设计系统、可访问性 |
 | `architecture/` | 系统设计：分布式、微服务、数据库设计 |
 | `ai/` | AI 工程：Prompt 设计、RAG、Agent 架构 |
+
+## 支持的 IDE
+
+| IDE | Skills 目录 |
+|---|---|
+| GitHub Copilot | `~/.copilot/skills` |
+| Cursor | `~/.cursor/skills` |
+| Claude Code | `~/.claude/skills` |
+| Kiro | `~/.kiro/skills` |
+| Codex CLI | `~/.codex/skills` |
