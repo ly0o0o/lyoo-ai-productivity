@@ -25,17 +25,18 @@ SKILLS=(
   "$SKILLS_ROOT/design/ui-ux-pro-max"
 )
 
-# IDE skills 目录映射
-declare -A IDE_DIRS=(
-  ["GitHub Copilot"]="$HOME/.copilot/skills"
-  ["Cursor"]="$HOME/.cursor/skills"
-  ["Claude Code"]="$HOME/.claude/skills"
-  ["Kiro"]="$HOME/.kiro/skills"
-  ["Codex CLI"]="$HOME/.codex/skills"
+# IDE 列表：名称|目录
+IDE_LIST=(
+  "GitHub Copilot|$HOME/.copilot/skills"
+  "Cursor|$HOME/.cursor/skills"
+  "Claude Code|$HOME/.claude/skills"
+  "Kiro|$HOME/.kiro/skills"
+  "Codex CLI|$HOME/.codex/skills"
 )
 
-for ide in "GitHub Copilot" "Cursor" "Claude Code" "Kiro" "Codex CLI"; do
-  target="${IDE_DIRS[$ide]}"
+for entry in "${IDE_LIST[@]}"; do
+  ide="${entry%%|*}"
+  target="${entry##*|}"
   echo ""
   echo "==> $ide  ($target)"
   for s in "${SKILLS[@]}"; do
