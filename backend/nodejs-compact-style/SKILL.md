@@ -1,9 +1,9 @@
 ---
 name: nodejs-compact-style
-description: Node.js/TypeScript 紧凑代码风格规范。当编写、审查或重构 Node.js/TypeScript 后端代码时触发。核心：无冗余注释、早返回、单行条件、可选链、内联对象、箭头函数简写、无 console.log、三元优于 if-else。
+description: Node.js/TypeScript 优雅紧凑代码风格规范。当编写、审查或重构 Node.js/TypeScript 后端代码时触发。核心：无冗余注释、早返回、单行条件、可选链、内联对象、箭头函数简写、无 console.log、三元优于 if-else、精准命名、单一职责、数组链式、并发优化、类型表达力。
 metadata:
   author: lyoo
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Node.js Compact Style
@@ -12,7 +12,7 @@ metadata:
 
 ---
 
-## 11 条规则（速查）
+## 规则速查（18 条）
 
 ### 1. 无多余注释
 删除所有 `/** */` 和 `//` 注释。用清晰命名表达意图。
@@ -180,6 +180,196 @@ if (fromCache) { cost = 0 } else { cost = QuotaCost.AI_VIDEO_ANALYSIS }
 
 // ✅
 const cost = fromCache ? 0 : QuotaCost.AI_VIDEO_ANALYSIS
+```
+
+---
+
+### 12. 精准命名
+名字要说清楚"是什么"或"做什么"，不用缩写，不用泛型词。
+
+```ts
+// ❌ 泛型、无意义
+const data = await getData(id)
+const res = process(data)
+const flag = check(user)
+const temp = items.filter(i => i.active)
+
+// ✅ 自解释
+const invoice = await fetchInvoiceById(invoiceId)
+const enrichedInvoice = attachLineItems(invoice)
+const hasActiveSubscription = checkSubscriptionStatus(user)
+const activeItems = items.filter(item => item.active)
+```
+
+规则：
+- 布尔值用 `is/has/can/should` 前缀
+- 异步函数用 `fetch/load/save/create/delete` 等动词
+- 不用 `data/info/result/temp/obj/item` 这类无意义词
+- 数组用复数：`users` 不是 `userList`
+
+### 13. 函数单一职责
+一个函数只做一件事。超过 20 行考虑拆分。
+
+```ts
+// ❌ 一个函数做了三件事
+async function handleVideoUpload(req: FastifyRequest) {
+  // 验证
+  if (!req.body.url) throw new Error('Missing url')
+  const videoId = extractVideoId(req.body.url)
+  if (!videoId) throw new Error('Invalid url')
+  // 查缓存
+  const cached = await prisma.task.findFirst({ where: { videoId } })
+  if (cached) return cached
+  // 创建任务
+  const task = await prisma.task.create({ data: { videoId, status: 'PENDING' } })
+  await queue.add('analyze', { taskId: task.id })
+  return task
+}
+
+// ✅ 拆成三个职责清晰的函数
+function validateVideoUrl(url: string): string {
+  if (!url) throw new Error('Missing url')
+  const videoId = extractVideoId(url)
+  if (!videoId) throw new Error('Invalid url')
+  return videoId
+}
+
+async function findCachedTask(videoId: string) {
+  return prisma.task.findFirst({ where: { videoId } })
+}
+
+async function createAnalysisTask(videoId: string) {
+  const task = await prisma.task.create({ data: { videoId, status: 'PENDING' } })
+  await queue.add('analyze', { taskId: task.id })
+  return task
+}
+
+async function handleVideoUpload(req: FastifyRequest) {
+  const videoId = validateVideoUrl(req.body.url)
+  return (await findCachedTask(videoId)) ?? createAnalysisTask(videoId)
+}
+```
+
+### 14. 数组链式方法
+用 `filter/map/find/reduce` 替代命令式循环，表达意图更清晰。
+
+```ts
+// ❌ 命令式，噪音多
+const activeUserIds: string[] = []
+for (const user of users) {
+  if (user.active) {
+    activeUserIds.push(user.id)
+  }
+}
+
+// ✅ 声明式，一眼看懂
+const activeUserIds = users.filter(u => u.active).map(u => u.id)
+```
+
+```ts
+// ❌
+let total = 0
+for (const item of lineItems) {
+  total += item.price * item.quantity
+}
+
+// ✅
+const total = lineItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+```
+
+例外：链式超过 3 步或逻辑复杂时，拆成多行并加变量名说明意图。
+
+### 15. Promise 并发
+无依赖的异步操作用 `Promise.all` 并发，不串行 await。
+
+```ts
+// ❌ 串行，慢 2 倍
+const user = await fetchUser(userId)
+const plan = await fetchPlan(planId)
+
+// ✅ 并发
+const [user, plan] = await Promise.all([fetchUser(userId), fetchPlan(planId)])
+```
+
+```ts
+// ❌ 循环里 await，N 次串行
+for (const id of taskIds) {
+  await processTask(id)
+}
+
+// ✅ 并发处理（注意控制并发数量避免打爆下游）
+await Promise.all(taskIds.map(id => processTask(id)))
+```
+
+### 16. 提取魔法值
+数字和字符串字面量提取为具名常量，放在文件顶部或 constants 文件。
+
+```ts
+// ❌ 魔法数字/字符串
+if (retryCount > 3) throw new Error('Too many retries')
+await sleep(5000)
+if (user.role === 'admin') return true
+
+// ✅
+const MAX_RETRY_COUNT = 3
+const RETRY_DELAY_MS = 5000
+const ROLE_ADMIN = 'admin'
+
+if (retryCount > MAX_RETRY_COUNT) throw new Error('Too many retries')
+await sleep(RETRY_DELAY_MS)
+if (user.role === ROLE_ADMIN) return true
+```
+
+### 17. 错误处理：避免吞错
+catch 块必须处理错误，不能静默忽略。错误要带上下文再抛出。
+
+```ts
+// ❌ 吞掉错误，调试噩梦
+try {
+  await uploadFile(path)
+} catch (e) {}
+
+// ❌ 丢失上下文
+try {
+  await uploadFile(path)
+} catch (e) {
+  throw new Error('Upload failed')
+}
+
+// ✅ 保留原始错误上下文
+try {
+  await uploadFile(path)
+} catch (cause) {
+  throw new Error(`Failed to upload file: ${path}`, { cause })
+}
+```
+
+### 18. 类型表达力
+用类型系统表达业务约束，不用 `any`，不用宽泛类型。
+
+```ts
+// ❌ 类型没有表达业务含义
+function createTask(type: string, status: string, data: any) {}
+const userId: string = '...'
+
+// ✅ 类型即文档
+type TaskType = 'VIDEO_ANALYSIS' | 'IMAGE_RESIZE' | 'AUDIO_TRANSCRIBE'
+type TaskStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED'
+type UserId = string & { readonly _brand: 'UserId' }  // Branded type，防止 id 混用
+
+function createTask(type: TaskType, status: TaskStatus, data: TaskPayload) {}
+```
+
+```ts
+// ❌ 返回类型模糊
+async function findUser(id: string) {
+  return prisma.user.findFirst({ where: { id } })
+}
+
+// ✅ 明确返回类型，调用方一眼知道可能为 null
+async function findUser(id: string): Promise<User | null> {
+  return prisma.user.findFirst({ where: { id } })
+}
 ```
 
 ---
