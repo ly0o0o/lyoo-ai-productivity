@@ -17,6 +17,8 @@
 - GitHub Copilot (`~/.copilot/skills`)
 - Cursor (`~/.cursor/skills`)
 - Claude Code (`~/.claude/skills`)
+- Kiro (`~/.kiro/skills`)
+- Codex CLI (`~/.codex/skills`)
 
 ---
 
