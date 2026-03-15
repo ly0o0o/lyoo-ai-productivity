@@ -10,9 +10,12 @@ link_skill() {
   local target_dir="$2"
   local skill_name
   skill_name="$(basename "$skill_path")"
+  local link="$target_dir/$skill_name"
 
   mkdir -p "$target_dir"
-  ln -sf "$skill_path" "$target_dir/$skill_name"
+  # 先删除已存在的 symlink 或目录，避免重复套娃
+  rm -rf "$link"
+  ln -s "$skill_path" "$link"
   echo "    ✓ $skill_name"
 }
 
