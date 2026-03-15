@@ -13,6 +13,7 @@
 
 - `backend/write-postgres-sql` — PostgreSQL SQL 生成、慢查询优化、Schema 感知查询
 - `backend/nodejs-compact-style` — Node.js/TypeScript 紧凑代码风格：早返回、无冗余注释、可选链、三元运算符、无 console.log
+- `backend/railway-deploy` — Railway.app 部署、服务管理、环境变量、数据库一键开通、CI/CD 集成
 
 ## 设计（Design）
 
