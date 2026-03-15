@@ -1,0 +1,109 @@
+{
+  "mcpServers": {
+    "serena": {
+      "disabled": true,
+      "command": "/Users/apple/.local/bin/uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server"
+      ],
+      "autoApprove": [
+        "read_file", "list_dir", "find_file", "get_symbols_overview",
+        "search_for_pattern", "find_symbol", "find_referencing_symbols",
+        "create_text_file", "replace_content", "replace_symbol_body",
+        "insert_before_symbol", "insert_after_symbol", "execute_shell_command",
+        "activate_project", "get_current_config", "switch_modes",
+        "check_onboarding_performed", "onboarding", "initial_instructions",
+        "prepare_for_new_conversation", "think_about_whether_you_are_done",
+        "think_about_task_adherence", "write_memory", "read_memory",
+        "list_memories", "delete_memory", "rename_memory", "edit_memory"
+      ]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "autoApprove": ["sequentialthinking"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "autoApprove": ["browser_navigate"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "autoApprove": ["resolve-library-id", "query-docs"]
+    },
+    "exa": {
+      "url": "https://mcp.exa.ai/mcp",
+      "type": "http",
+      "autoApprove": ["get_code_context_exa", "web_search_exa"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "autoApprove": []
+    },
+    "apifox": {
+      "command": "npx",
+      "args": ["-y", "apifox-mcp-server@latest", "--project-id=${APIFOX_PROJECT_ID}"],
+      "env": {
+        "APIFOX_ACCESS_TOKEN": "${APIFOX_ACCESS_TOKEN}"
+      },
+      "autoApprove": []
+    },
+    "postman": {
+      "url": "https://mcp.postman.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${POSTMAN_API_KEY}"
+      },
+      "autoApprove": [
+        "getAuthenticatedUser", "getWorkspaces", "getWorkspace",
+        "getCollections", "getCollection", "createCollection", "putCollection",
+        "patchCollection", "deleteCollection", "createCollectionFolder",
+        "getCollectionFolder", "updateCollectionFolder", "deleteCollectionFolder",
+        "createCollectionRequest", "getCollectionRequest", "updateCollectionRequest",
+        "deleteCollectionRequest", "createCollectionResponse", "getCollectionResponse",
+        "updateCollectionResponse", "deleteCollectionResponse",
+        "transferCollectionRequests", "transferCollectionFolders",
+        "transferCollectionResponses", "getEnvironments", "getEnvironment",
+        "createEnvironment", "putEnvironment", "patchEnvironment", "deleteEnvironment",
+        "runCollection", "getEnabledTools"
+      ],
+      "disabledTools": [
+        "createCollectionComment", "updateCollectionComment", "deleteCollectionComment",
+        "getCollectionComments", "createFolderComment", "updateFolderComment",
+        "deleteFolderComment", "getFolderComments", "createRequestComment",
+        "updateRequestComment", "deleteRequestComment", "getRequestComments",
+        "createResponseComment", "updateResponseComment", "deleteResponseComment",
+        "getResponseComments", "resolveCommentThread", "createMock", "getMock",
+        "getMocks", "updateMock", "deleteMock", "publishMock", "unpublishMock",
+        "createMonitor", "getMonitor", "getMonitors", "updateMonitor", "deleteMonitor",
+        "runMonitor", "createSpec", "getSpec", "getAllSpecs", "getSpecDefinition",
+        "getSpecFiles", "getSpecFile", "createSpecFile", "updateSpecFile",
+        "updateSpecProperties", "deleteSpec", "deleteSpecFile", "generateCollection",
+        "generateSpecFromCollection", "getSpecCollections",
+        "getGeneratedCollectionSpecs", "syncCollectionWithSpec",
+        "syncSpecWithCollection", "getAsyncSpecTaskStatus",
+        "getStatusOfAnAsyncApiTask", "getCollectionUpdatesTasks", "getAnalyticsData",
+        "getAnalyticsMetadata", "addWorkspaceToPrivateNetwork",
+        "removeWorkspaceFromPrivateNetwork", "listPrivateNetworkWorkspaces",
+        "listPrivateNetworkAddRequests", "respondPrivateNetworkAddRequest",
+        "createCollectionFork", "getCollectionForks", "getCollectionsForkedByUser",
+        "getSourceCollectionStatus", "mergeCollectionFork", "pullCollectionChanges",
+        "publishDocumentation", "unpublishDocumentation", "duplicateCollection",
+        "getDuplicateCollectionTaskStatus", "searchPostmanElementsInPublicNetwork",
+        "searchPostmanElementsInPrivateNetwork", "updateApiCollectionComment",
+        "deleteApiCollectionComment", "getWorkspaceGlobalVariables",
+        "updateWorkspaceGlobalVariables", "getWorkspaceTags", "updateWorkspaceTags",
+        "getCollectionTags", "updateCollectionTags", "getTaggedEntities",
+        "createWorkspace", "updateWorkspace", "deleteWorkspace"
+      ]
+    }
+  }
+}
