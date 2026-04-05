@@ -6,6 +6,7 @@
 ## 工作流（Workflow）
 
 - `workflow/code-review` — PR 评审、diff 审查、合并判断、需求漂移识别
+- `workflow/doc-writing` — 结构化技术文档写作：需求、产品讨论、技术设计、API 变更、决策记录，强调信息密度与可扫描性
 - `workflow/question-details` — 需求模糊时强制澄清，先确认再实现
 - `workflow/requirements-plan-design-thinking` — 功能方案设计、架构权衡、多路径收敛、反驳不合理需求
 

@@ -22,6 +22,7 @@ link_skill() {
 # 所有 skills 列表
 SKILLS=(
   "$SKILLS_ROOT/workflow/code-review"
+  "$SKILLS_ROOT/workflow/doc-writing"
   "$SKILLS_ROOT/workflow/question-details"
   "$SKILLS_ROOT/workflow/requirements-plan-design-thinking"
   "$SKILLS_ROOT/backend/write-postgres-sql"
