@@ -15,7 +15,7 @@
 - `backend/write-postgres-sql` — PostgreSQL SQL 生成、慢查询优化、Schema 感知查询
 - `backend/write-guance-dql` — 观测云日志查看器经典模式搜索语句生成：query_string 语法，支持字段过滤、AND/OR/NOT、通配符、JSON 字段查询
 - `backend/write-mongodb-query` — MongoDB 增删改查语句生成，区分 Navicat（shell 语法）和 Compass（GUI 过滤器语法），Schema 感知、索引分析、多方案对比
-- `backend/nodejs-compact-style` — Node.js/TypeScript 紧凑代码风格：早返回、无冗余注释、可选链、三元运算符、无 console.log
+- `backend/nodejs-compact-style` — Node.js/TypeScript 紧凑代码风格：早返回、必要注释、可选链、三元运算符、无 console.log
 - `backend/railway-deploy` — Railway.app 部署、服务管理、环境变量、数据库一键开通、CI/CD 集成
 
 ## 设计（Design）

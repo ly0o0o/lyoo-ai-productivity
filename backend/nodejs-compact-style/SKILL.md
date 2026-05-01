@@ -1,23 +1,44 @@
 ---
 name: nodejs-compact-style
-description: Node.js/TypeScript 优雅紧凑代码风格规范。当编写、审查或重构 Node.js/TypeScript 后端代码时触发。核心：无冗余注释、早返回、单行条件、可选链、内联对象、箭头函数简写、无 console.log、三元优于 if-else、精准命名、单一职责、数组链式、并发优化、类型表达力。
+description: Use when 编写、审查或重构 Node.js/TypeScript 后端代码，需要统一紧凑、清晰、类型安全、可维护的代码风格。
 metadata:
   author: lyoo
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Node.js Compact Style
 
-**核心原则：删除冗余，保留本质。代码即文档。**
+**核心原则：删除噪音，保留本质。代码表达常规逻辑，注释解释不显然的意图、约束和取舍。**
 
 ---
 
+## 使用方式
+
+先保证正确性、可观测性和类型表达，再追求紧凑。不要为了压缩行数牺牲可读性、错误上下文或业务边界。
+
+执行优先级：
+- 正确性 > 可观测性 > 类型安全 > 可读性 > 紧凑
+- 命名、类型、函数边界能表达清楚时，不写注释
+- 业务约束、外部系统怪癖、并发/事务/缓存一致性、复杂算法不直观时，写短而具体的注释
+- 规则冲突时，选择更容易维护和排错的写法
+
+交付前自查：
+- 没有 `console.log`、吞错、无意义变量名、宽泛 `any`
+- 没有给必传对象写可选链
+- 没有把有依赖的异步操作错误并发化
+- 没有用复杂三元、过长链式调用或过度内联降低可读性
+
 ## 规则速查（18 条）
 
-### 1. 无多余注释
-删除所有 `/** */` 和 `//` 注释。用清晰命名表达意图。
+### 1. 注释少而有用
+删除复述代码的注释。保留必要、有意义、能解释难点的注释。
 
-例外：公共 API 的 JSDoc、复杂算法的关键步骤说明。
+应该注释：
+- 业务规则背后的原因，不只是规则本身
+- 外部 API、历史数据、兼容性约束等非代码可见事实
+- 事务、锁、缓存、重试、并发控制里的关键不变量
+- 复杂算法、正则、位运算、时间窗口等难以一眼看懂的逻辑
+- 公共 API 的 JSDoc
 
 ```ts
 // ❌
@@ -26,6 +47,9 @@ async function validateVideo(url: string, platform: string) {}
 
 // ✅
 async function validateVideo(url: string, platform: AiVideoAnalysisPlatform): Promise<VideoInfo> {}
+
+// ✅ 第三方回调可能重复投递，同一 providerEventId 必须幂等落库。
+await saveWebhookEventIfAbsent(providerEventId, payload)
 ```
 
 ### 2. 早返回（Early Return）
@@ -182,6 +206,8 @@ if (fromCache) { cost = 0 } else { cost = QuotaCost.AI_VIDEO_ANALYSIS }
 const cost = fromCache ? 0 : QuotaCost.AI_VIDEO_ANALYSIS
 ```
 
+反例：嵌套条件、带副作用、需要错误上下文时，不要硬写三元。
+
 ---
 
 ### 12. 精准命名
@@ -300,6 +326,8 @@ for (const id of taskIds) {
 // ✅ 并发处理（注意控制并发数量避免打爆下游）
 await Promise.all(taskIds.map(id => processTask(id)))
 ```
+
+有顺序依赖、事务依赖、限流要求或需要短路失败时，不要机械并发。
 
 ### 16. 提取魔法值
 数字和字符串字面量提取为具名常量，放在文件顶部或 constants 文件。
@@ -424,8 +452,8 @@ async function getAiVideoAnalysisQuotaCost(request: FastifyRequest) {
 |---|---|
 | 复杂业务逻辑 | 可加空行分隔逻辑块 |
 | 函数超过 50 行 | 可适当加空行 |
-| 公共 API | 可保留 JSDoc |
-| 复杂算法 | 可加关键步骤注释 |
+| 公共 API | 保留必要 JSDoc |
+| 复杂算法 / 正则 / 并发控制 / 外部系统兼容 | 加短而具体的关键注释 |
 | `src/scripts/` 调试脚本 | 可用 console.log |
 
 ---

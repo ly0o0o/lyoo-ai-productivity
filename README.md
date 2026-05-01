@@ -96,7 +96,7 @@ ls -la ~/.claude/skills/
 | `question-details` | workflow | 需求模糊时强制澄清，先确认再实现 |
 | `requirements-plan-design-thinking` | workflow | 功能方案设计、架构权衡、多路径收敛、反驳不合理需求 |
 | `write-postgres-sql` | backend | PostgreSQL SQL 生成、慢查询优化、Schema 感知查询 |
-| `nodejs-compact-style` | backend | Node.js/TypeScript 紧凑代码风格：早返回、无注释、可选链、三元运算符 |
+| `nodejs-compact-style` | backend | Node.js/TypeScript 紧凑代码风格：早返回、必要注释、可选链、三元运算符 |
 | `railway-deploy` | backend | Railway.app 部署、服务管理、环境变量、数据库一键开通、CI/CD 集成 |
 | `ui-ux-pro-max` | design | UI/UX 方案设计、组件实现、交互优化、可访问性、设计系统对齐 |
 
